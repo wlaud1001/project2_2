@@ -13,7 +13,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.provider.ContactsContract;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,33 +115,40 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
 
                             Bitmap bitmap;
 
-                            if(!data.equals("Nop"))
+                            String string = (String)data;
+                            if(string.length() > 100)
                             {
 
                                // bitmap = StringToBitMap((String)data);
 
-                                int idata = Integer.parseInt((String)data);
-                                Bitmap bitmap2 = queryContactImage((idata));
-                                //bitmap = queryContactImage((idata));
-                                //
-                                bitmap = getRoundedBitmap(bitmap2, 71);
-                                //bitmap = convertRoundedBitmap(bitmap);
+                                bitmap = StringToBitmap(string);
 
+                                //bitmap = convertRoundedBitmap(bitmap);
+                                bitmap = resizingBitmap(bitmap);
+                                bitmap = getRoundedBitmap(bitmap, 60);
 
                                 setViewImage((ImageView) v, bitmap);
                                 // setViewImage((ImageView) v, text);
                             }
-                            else
+                            else if(string.equals("Nop"))
                             {
                                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.kakao);
-                            }
 
-                                bitmap = resizingBitmap(bitmap);
-
-                                bitmap = getRoundedBitmap(bitmap, 60);
                                 //bitmap = convertRoundedBitmap(bitmap);
+                                bitmap = resizingBitmap(bitmap);
+                                bitmap = getRoundedBitmap(bitmap, 60);
 
                                 setViewImage((ImageView) v, bitmap);
+                            }
+                            else
+                            {
+                                setViewImage((ImageView) v, text);
+                            }
+
+
+                                //bitmap = convertRoundedBitmap(bitmap);
+
+
 
                             }
 
@@ -157,16 +163,21 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
     }
 
 
-    public Bitmap StringToBitMap(String encodedString){
-        try{
-            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+    public static Bitmap StringToBitmap (String encodedString){
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
+        } catch (NullPointerException e) {
             e.getMessage();
+            return null;
+        } catch (OutOfMemoryError e) {
             return null;
         }
     }
+
+
+
 
     private Bitmap queryContactImage(int imageDataRow) {
 
@@ -233,14 +244,12 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
 
 
     public Bitmap resizingBitmap(Bitmap oBitmap) {
-        if (oBitmap == null) return null;
-
+        if (oBitmap == null)
+            return null;
         float width = oBitmap.getWidth();
         float height = oBitmap.getHeight();
         float resizing_size = 120;
-
         Bitmap rBitmap = null;
-
         if (width > resizing_size) {
             float mWidth = (float) (width / 100);
             float fScale = (float) (resizing_size / mWidth);

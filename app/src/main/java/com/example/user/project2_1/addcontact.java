@@ -100,12 +100,7 @@ public class addcontact extends AppCompatActivity {
             super.onPreExecute();
             //show loading dialog
 
-            pDialog = new ProgressDialog(addcontact.this);
-            pDialog.setMessage("loading...");
-            pDialog.setCancelable(false);
-            pDialog.dismiss();
-
-                pDialog.show();
+            showProgressDialog();
 
 
         }
@@ -198,13 +193,34 @@ public class addcontact extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            //Dismiss the dialog
-            if(pDialog.isShowing()){
-                pDialog.dismiss();
+            if (addcontact.this.isDestroyed()) { // or call isFinishing() if min sdk version < 17
+                return;
             }
+            dismissProgressDialog();
 
         }
+    }
+
+    private void showProgressDialog() {
+        if (pDialog == null) {
+            pDialog = new ProgressDialog(this);
+            pDialog.setMessage("Loading. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+        }
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dismissProgressDialog();
+        super.onDestroy();
     }
 
 

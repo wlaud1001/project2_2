@@ -22,7 +22,7 @@ public class itemclickevent extends AppCompatActivity {
         String mobile = getIntent().getStringExtra("mobile");
         Bitmap bitmap = getIntent().getParcelableExtra("photo");
 
-
+        bitmap = resizingBitmap(bitmap);
         TextView tname = (TextView)findViewById(R.id.tname);
         TextView temail = (TextView)findViewById(R.id.temail);
         TextView tmobile = (TextView)findViewById(R.id.tmobile);
@@ -60,7 +60,30 @@ public class itemclickevent extends AppCompatActivity {
     }
 
 
+    public Bitmap resizingBitmap (Bitmap oBitmap){
+        if (oBitmap == null)
+            return null;
+        float width = oBitmap.getWidth();
+        float height = oBitmap.getHeight();
+        float resizing_size = 120;
+        Bitmap rBitmap = null;
+        if (width > resizing_size) {
+            float mWidth = (float) (width / 100);
+            float fScale = (float) (resizing_size / mWidth);
+            width *= (fScale / 100);
+            height *= (fScale / 100);
 
+        } else if (height > resizing_size) {
+            float mHeight = (float) (height / 100);
+            float fScale = (float) (resizing_size / mHeight);
+            width *= (fScale / 100);
+            height *= (fScale / 100);
+        }
+
+        //Log.d("rBitmap : " + width + ", " + height);
+        rBitmap = Bitmap.createScaledBitmap(oBitmap, (int) width, (int) height, true);
+        return rBitmap;
+    }
 
 
 

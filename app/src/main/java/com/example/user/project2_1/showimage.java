@@ -49,9 +49,11 @@ public class showimage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showimage);
 
+
+
+
         Bitmap bitmap = getIntent().getParcelableExtra("bitmap");
         photoid = getIntent().getStringExtra("photoid");
-
         ImageView photo = findViewById(R.id.clickedimage);
 
         photo.setImageBitmap(bitmap);
