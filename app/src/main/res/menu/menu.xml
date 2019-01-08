@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.user.project2_1.MainActivity">
+    <item
+        android:id="@+id/refresh"
+        android:icon="@drawable/e3"
+        android:title="새로고침"
+        app:showAsAction="ifRoom" />
+</menu>
